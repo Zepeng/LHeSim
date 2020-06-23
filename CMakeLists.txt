@@ -39,12 +39,12 @@ target_link_libraries(main ${Geant4_LIBRARIES})
 #----------------------------------------------------------------------------
 #
 # Checks whether a "data" directory exists at the place GEANT4 wants to save
-# the root files. 
+# the root files.
 # If it does not exist, this will lead to errors when you run the simulation
 #
 IF(EXISTS "../data")
        message("-- Data directory exists (needed for the root outputs)")
-else() 
+else()
        message(SEND_ERROR " \n WARNING \n \"../data\" directory DOES NOT exists (needed for the root outputs)")
 endif()
 
@@ -52,7 +52,6 @@ endif()
 # Copy all scripts to the build directory
 #
 set(SCRIPTS
-  oneSingleEnergy.mac
   vis.mac
   init.mac
   init_vis.mac
