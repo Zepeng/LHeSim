@@ -42,8 +42,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 		
 		G4double EdepStep = aStep->GetTotalEnergyDeposit();
 		
-        std::cout << currentPhysicalName << EdepStep << std::endl;
-        if (EdepStep > 0.) eventAction->EdepInLHe = eventAction->EdepInLHe + EdepStep;
-	}
+        if (EdepStep > 0.)
+        {
+            eventAction->EdepInLHe = eventAction->EdepInLHe + EdepStep;
+        }
+    }
 }
 

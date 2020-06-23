@@ -25,26 +25,14 @@ RunAction::RunAction() : G4UserRunAction()
 	  G4cout << "Using " << analysisManager->GetType() << G4endl;
 
 	  // Create directories
-	  //analysisManager->SetHistoDirectoryName("histograms");
-	  //analysisManager->SetNtupleDirectoryName("ntuple");
 	  analysisManager->SetVerboseLevel(1);
 	  analysisManager->SetFirstHistoId(0); // default is 0
 	  analysisManager->SetFirstNtupleId(0); // default is 0
 
-	  // Book histograms, ntuple
-	  //
-
-	  // Creating histograms
-
-	  //  G4int CreateH1(const G4String& name, const G4String& title,
-	  //                 G4int nbins, G4double xmin, G4double xmax,
-	  //                 const G4String& unitName = "none",
-	  //                 const G4String& fcnName = "none",
-	  //                 const G4String& binSchemeName = "linear");
 
 	  xmin = 0; // in eV
-	  xmax = 10e4; // in eV
-	  binsize = 200; // in eV
+	  xmax = 40e4; // in eV
+	  binsize = 1000; // in eV
 	  nbins= (int)((xmax-xmin)/binsize);
 	  analysisManager->CreateH1("Histo1","Edep in LHe", nbins, xmin*eV, xmax*eV);
 
@@ -52,8 +40,6 @@ RunAction::RunAction() : G4UserRunAction()
 	  //
 	  analysisManager->CreateNtuple("B4", "Edep and TrackL...");
 	  analysisManager->CreateNtupleDColumn("Edep");
-	  //analysisManager->CreateNtupleDColumn("nAbsPhotons");
-	  //analysisManager->CreateNtupleDColumn("absTime");
 	  analysisManager->CreateNtupleDColumn("EPrimaries");
 	  analysisManager->FinishNtuple();
 

@@ -43,7 +43,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double detector_dZ = 20*cm;
   //
   G4NistManager* nist = G4NistManager::Instance();
-  G4Material* default_mat = nist->FindOrBuildMaterial("G4_AIR");
   G4Material* cu_barrel = nist->FindOrBuildMaterial("G4_Cu");
   G4Material* al_barrel = nist->FindOrBuildMaterial("G4_Al");
   G4Material* glass = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
@@ -52,7 +51,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double massOfMole = 1.008*g/mole; 
   G4double vacuumdensity = 1.e-15*g/cm3; 
   G4double pressure = 3.e-8*pascal; 
-  G4Material* Vacuum = new G4Material("interGalactic", atomicNumber, massOfMole, vacuumdensity);
+  G4Material* Vacuum = new G4Material("vacuum", atomicNumber, massOfMole, vacuumdensity);
 
   //     
   // World
@@ -180,8 +179,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // target  
   //
-  G4double target_radius = 5*cm;
-  G4double target_dZ = 5*cm;  
+  G4double target_radius = 0.05*cm;
+  G4double target_dZ = 0.5*cm;  
     
   G4Tubs* solidTarget =
     new G4Tubs("Target", 0., target_radius, 0.5*target_dZ, 0., twopi);

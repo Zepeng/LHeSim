@@ -53,7 +53,9 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
 	  // fill histograms
-	  analysisManager->FillH1(0, EdepInLHe);
+	  if(EdepInLHe > 0)
+          std::cout << EdepInLHe/eV << std::endl;
+      analysisManager->FillH1(0, EdepInLHe);
 
 	  // fill ntuple
 	  analysisManager->FillNtupleDColumn(0, EdepInLHe);
@@ -63,7 +65,7 @@ void EventAction::EndOfEventAction(const G4Event* evt)
   //
   G4int eventID = 1 + evt->GetEventID();
   //G4int printModulo = G4RunManager::GetRunManager()->GetPrintProgress();
-  G4int printModulo = 100;
+  G4int printModulo = 10000;
   if ( ( printModulo > 0 ) && ( eventID % printModulo == 0 ) )
   {
     G4cout << "---> End of event: " << eventID << G4endl;

@@ -18,12 +18,15 @@
 #include "G4ParticleDefinition.hh"
 
 #include "G4ThreeVector.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4PhysicalConstants.hh"
 #include "globals.hh"
 
 #include "G4ios.hh"
 #include "fstream"
 #include "iomanip"
 #include "G4GeneralParticleSource.hh" 
+#include "Randomize.hh"
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
@@ -43,7 +46,16 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-	//create vertex
-	
+	//TFile* efile = new TFile("Co_60.root", "READ");
+    //TH1F*  ehist = (TH1F*)efile->Get("hist");
+    //create vertex
+    double theta, phi;
+    theta = 2*(G4UniformRand() -0.5)* pi;
+    phi = std::acos(1 - (1-std::cos(1./180.*pi)) * G4UniformRand());
+    double x = std::cos(phi);
+    double y = std::sin(phi)*std::cos(theta);
+    double z = std::sin(phi)*std::sin(theta);
+    G4ThreeVector dir= G4ThreeVector(x, y, z);
+    particleGun->GetCurrentSource()->GetAngDist()->SetParticleMomentumDirection(dir);
 	particleGun->GeneratePrimaryVertex(anEvent);
 }
