@@ -18,7 +18,7 @@ else()
 endif()
 
 # Setup of ROOT ANALYSIS : optional.
-option(WITH_ANALYSIS_USE "Build example with analysis objects" OFF)
+option(WITH_ANALYSIS_USE "Build example with analysis objects" ON)
 if(WITH_ANALYSIS_USE)
 add_definitions(-DUSEROOT)
 else()
