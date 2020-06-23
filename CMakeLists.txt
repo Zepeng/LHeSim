@@ -1,6 +1,8 @@
+
 #----------------------------------------------------------------------------
 # Setup the project
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+#
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(main)
 
 #----------------------------------------------------------------------------
@@ -15,6 +17,12 @@ else()
   find_package(Geant4 REQUIRED)
 endif()
 
+# Setup of ROOT ANALYSIS : optional.
+option(WITH_ANALYSIS_USE "Build example with analysis objects" OFF)
+if(WITH_ANALYSIS_USE)
+add_definitions(-DUSEROOT)
+else()
+endif()
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
 # Setup include directory for this project
@@ -22,43 +30,50 @@ endif()
 include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-
+#----------------------------------------------------------------------------
+# Find ROOT (required package)
+#
+find_package(ROOT REQUIRED)
+if(WITH_ANALYSIS_USE)
+	EXECUTE_PROCESS(COMMAND root-config --cflags OUTPUT_VARIABLE ROOT_CXX_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ROOT_CXX_FLAGS}")
+endif(WITH_ANALYSIS_USE)
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
+#file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
+#file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
+
+include_directories(${PROJECT_SOURCE_DIR}/include
+                    ${PROJECT_SOURCE_DIR}/shared/include
+                    ${Geant4_INCLUDE_DIR}
+                    ${ROOT_INCLUDE_DIR})
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc
+                  ${PROJECT_SOURCE_DIR}/shared/src/*.cc)
+file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh
+                  ${PROJECT_SOURCE_DIR}/shared/include/*.hh)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(main main.cc ${sources} ${headers})
-target_link_libraries(main ${Geant4_LIBRARIES})
+
+if(WITH_ANALYSIS_USE)
+	EXECUTE_PROCESS(COMMAND root-config --libs OUTPUT_VARIABLE ROOT_LD_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+	set(CMAKE_EXE_LINKER_FLAGS ${ROOT_LD_FLAGS})
+endif(WITH_ANALYSIS_USE)
+
+target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
+# Copy all scripts to the build directory. This is so that we can run the executable directly because it
+# relies on these scripts being in the current working directory.
 #
-# Checks whether a "data" directory exists at the place GEANT4 wants to save
-# the root files.
-# If it does not exist, this will lead to errors when you run the simulation
-#
-IF(EXISTS "../data")
-       message("-- Data directory exists (needed for the root outputs)")
-else()
-       message(SEND_ERROR " \n WARNING \n \"../data\" directory DOES NOT exists (needed for the root outputs)")
-endif()
-
-#----------------------------------------------------------------------------
-# Copy all scripts to the build directory
-#
-set(SCRIPTS
-  vis.mac
-  init.mac
-  init_vis.mac
-  run1.mac
+set(main_SCRIPTS
   )
 
-foreach(_script ${SCRIPTS})
+foreach(_script ${main_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
@@ -66,9 +81,4 @@ foreach(_script ${SCRIPTS})
     )
 endforeach()
 
-#----------------------------------------------------------------------------
-# Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
-#
-install(TARGETS main DESTINATION bin)
-
-
+install(TARGETS main DESTINATION bin )
