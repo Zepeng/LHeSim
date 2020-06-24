@@ -31,7 +31,7 @@ RunAction::RunAction() : G4UserRunAction()
 
 
 	  xmin = 0; // in eV
-	  xmax = 40e4; // in eV
+	  xmax = 2e5; // in eV
 	  binsize = 1000; // in eV
 	  nbins= (int)((xmax-xmin)/binsize);
 	  analysisManager->CreateH1("Histo1","Edep in LHe", nbins, xmin*eV, xmax*eV);

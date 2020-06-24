@@ -55,10 +55,10 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	  // fill histograms
 	  if(EdepInLHe > 0)
           std::cout << EdepInLHe/eV << std::endl;
-      analysisManager->FillH1(0, EdepInLHe);
+      analysisManager->FillH1(0, EdepInLHe/eV);
 
 	  // fill ntuple
-	  analysisManager->FillNtupleDColumn(0, EdepInLHe);
+	  analysisManager->FillNtupleDColumn(0, EdepInLHe/keV);
 	  analysisManager->AddNtupleRow();
 
   // Print per event (modulo n)

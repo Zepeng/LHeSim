@@ -27,6 +27,8 @@
 #include "iomanip"
 #include "G4GeneralParticleSource.hh" 
 #include "Randomize.hh"
+#include <TFile.h>
+#include <TH1F.h>
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
@@ -46,9 +48,21 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-	//TFile* efile = new TFile("Co_60.root", "READ");
-    //TH1F*  ehist = (TH1F*)efile->Get("hist");
+	//TFile* efile = new TFile("/workfs/exo/zepengli94/LHeSim/build/Co_60.root", "READ");
+    //TH1F*  ehist = (TH1F*)efile->Get("hspec");
+    //Generate a mono-energetic gamma from Co-60 decay which has two gamma decay channels.
+    //It's assumed that two channels have equal branching ratio
+    //double energy = 1170;
+    //if(G4UniformRand() > 0.5)
+    //    energy = 1330;
+    //Generate a mono-energetic gamma from Ba-133 decay.
+    //double energy = 356;
+    //Generate a mono-energetic gamma from Cs-137 decay.
+    //double energy = 662;
+    //efile->Close();
     //create vertex
+    //generate energy of muons
+    double energy = G4UniformRand()*1000000000;
     double theta, phi;
     theta = 2*(G4UniformRand() -0.5)* pi;
     phi = std::acos(1 - (1-std::cos(1./180.*pi)) * G4UniformRand());
@@ -56,6 +70,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     double y = std::sin(phi)*std::cos(theta);
     double z = std::sin(phi)*std::sin(theta);
     G4ThreeVector dir= G4ThreeVector(x, y, z);
+    particleGun->GetCurrentSource()->GetEneDist()->SetMonoEnergy(energy*keV);
     particleGun->GetCurrentSource()->GetAngDist()->SetParticleMomentumDirection(dir);
 	particleGun->GeneratePrimaryVertex(anEvent);
 }

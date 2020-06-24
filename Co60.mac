@@ -1,0 +1,10 @@
+## Particle type, position, energy...
+#/gps/source/intensity 1
+/gps/particle ion
+/gps/ion 27 60
+/gps/energy 0.0 eV
+/gps/pos/type Point
+/gps/pos/centre  0 0 0  cm
+
+## Number of events to run
+/run/beamOn 100

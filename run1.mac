@@ -1,8 +1,8 @@
 ## Particle type, position, energy...
-/gps/particle gamma 
+/gps/particle mu+ 
 /gps/source/intensity 1
 #/gps/number 1
 /gps/pos/centre  -61 0 0  cm
-/gps/energy 1330. keV
+#/gps/energy 1330. keV
 ## Number of events to run
 /run/beamOn 1000000
